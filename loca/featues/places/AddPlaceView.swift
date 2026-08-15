@@ -8,6 +8,7 @@ struct AddPlaceView: View {
 
    // input
    @Binding var visible: Bool
+   var reference: Place? = nil
 
    // state
    @State private var place: Place = .init()
@@ -168,7 +169,23 @@ struct AddPlaceView: View {
                }
             }
          }
-         .navigationTitle("Add new place")
+         onAppear {
+            if reference != nil {
+               // copy from reference to place
+               self.place.title = reference?.title ?? ""
+               self.place.image = reference?.image
+               self.place.website = reference?.website
+               self.place.address = reference?.address
+               self.place.favorite = reference?.favorite ?? false
+               self.place.visited = reference?.visited  ?? false
+               self.place.category = reference?.category
+               self.place.latitude = reference?.latitude
+               self.place.longitude = reference?.longitude
+               self.place.notes = reference?.notes
+               self.place.rating = reference?.rating ?? 0
+            }
+         }
+         .navigationTitle(reference == nil ? "Add new place" : "Edit place")
          .navigationBarTitleDisplayMode(.inline)
          .toolbar {
             ToolbarItem(placement: .topBarLeading, content: {
@@ -178,7 +195,21 @@ struct AddPlaceView: View {
             })
             ToolbarItem(placement: .topBarTrailing, content: {
                Button("Save") {
-                  modelContext.insert(place)
+                  if reference != nil {
+                     reference!.title = self.place.title
+                     reference!.image = self.place.image
+                     reference!.website = self.place.website
+                     reference!.address = self.place.address
+                     reference!.favorite = self.place.favorite
+                     reference!.visited = self.place.visited
+                     reference!.category = self.place.category
+                     reference!.latitude = self.place.latitude
+                     reference!.longitude = self.place.longitude
+                     reference!.notes = self.place.notes
+                     reference!.rating = self.place.rating
+                  } else {
+                     modelContext.insert(place)
+                  }
 
                   visible = false
                }
