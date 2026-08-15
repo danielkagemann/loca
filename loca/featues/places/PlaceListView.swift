@@ -40,6 +40,7 @@ struct PlaceListView: View {
                      PlaceRow(place: place)
                   }
                }
+               .listStyle(.plain)
             }
          }
       }

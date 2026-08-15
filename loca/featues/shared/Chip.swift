@@ -7,46 +7,19 @@
 
 import SwiftUI
 
-enum ChipVariant: CaseIterable {
-   case primary
-   case black
-   case outline
-}
-
 struct Chip: View {
    // input
    let content: String
-   let variant: ChipVariant = .primary
    
-   var fgColor: Color {
-      switch variant {
-      case .primary:
-         return .white
-      case .black:
-         return .white
-      case .outline:
-         return .accent
-      }
-   }
-   var bgColor: Color {
-      switch variant {
-      case .primary:
-         return .accent
-      case .black:
-         return .black
-      case .outline:
-         return .clear
-      }
-   }
-
    var body: some View {
       Text(content)
-         .padding(.horizontal, 6)
-         .padding(.vertical, 2)
-         .background(bgColor)
-         .foregroundStyle(fgColor)
-         .clipShape(.capsule)
-         .font(.caption)
+         .padding(.horizontal, 8)
+         .padding(.vertical, 3)
+         .background(.accent.opacity(0.1))
+         .foregroundStyle(.accent)
+         .clipShape(RoundedRectangle(cornerRadius: 8))
+         .font(.caption2)
+         .bold()
    }
 }
 

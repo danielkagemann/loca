@@ -8,49 +8,76 @@
 import MapKit
 
 extension MKPointOfInterestCategory {
-
    var displayName: String {
       switch self {
       case .restaurant:
          return "Restaurant"
       case .cafe:
-         return "Café"
+         return "Cafe"
       case .hotel:
          return "Hotel"
       case .parking:
-         return "Parkplatz"
+         return "Parking"
       case .gasStation:
-         return "Tankstelle"
+         return "Gas Station"
       case .hospital:
-         return "Krankenhaus"
+         return "Hospital"
       case .pharmacy:
-         return "Apotheke"
+         return "Pharmacy"
       case .school:
-         return "Schule"
+         return "School"
       case .bank:
          return "Bank"
       case .atm:
-         return "Geldautomat"
+         return "ATM"
       case .store:
-         return "Geschäft"
+         return "Store"
       case .bakery:
-         return "Bäckerei"
+         return "Bakery"
       case .beach:
-         return "Strand"
+         return "Beach"
       case .park:
          return "Park"
       case .museum:
          return "Museum"
       case .movieTheater:
-         return "Kino"
+         return "Movie Theater"
       case .fitnessCenter:
-         return "Fitnessstudio"
+         return "Fitness Center"
       case .airport:
-         return "Flughafen"
+         return "Airport"
       case .publicTransport:
-         return "Öffentliche Verkehrsmittel"
+         return "Public Transport"
       default:
-         return "Ort"
+         return "---"
       }
+   }
+
+   static var allCategories: [MKPointOfInterestCategory] {
+      [
+         .restaurant,
+         .cafe,
+         .hotel,
+         .parking,
+         .gasStation,
+         .hospital,
+         .pharmacy,
+         .school,
+         .bank,
+         .atm,
+         .store,
+         .bakery,
+         .beach,
+         .park,
+         .museum,
+         .movieTheater,
+         .fitnessCenter,
+         .airport,
+         .publicTransport,
+      ]
+   }
+
+   static func getAllCategories() -> [String] {
+      allCategories.map { $0.displayName }.sorted()
    }
 }

@@ -15,7 +15,7 @@ struct Rating: View {
    
    var offColor = Color.gray
    var onColor = Color.orange
-   
+     
    var body: some View {
       HStack (spacing: 2){
          ForEach(1..<maximumRating + 1, id: \.self) { number in

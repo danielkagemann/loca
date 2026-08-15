@@ -118,20 +118,6 @@ struct AddPlaceView: View {
          }
          .listRowInsets(EdgeInsets())
       }
-      .sheet(isPresented: $showCamera) {
-         CameraView { outImage in
-            let raw = outImage.compressImage()!
-            place.image = raw
-         }
-      }
-      .sheet(isPresented: $showImage) {
-         CustomImagePicker { metadata in
-            if let outImage = metadata.image {
-               let raw = outImage.compressImage()!
-               place.image = raw
-            }
-         }
-      }
    }
 
    var body: some View {
@@ -144,15 +130,27 @@ struct AddPlaceView: View {
 
                Section("Details") {
                   RowItem("Title") {
-                     TextField("Name", text: $place.title).multilineTextAlignment(.trailing)
+                     TextField("Name",
+                               text: $place.title).multilineTextAlignment(.trailing)
+                        .font(.callout)
                   }
                   RowItem("Address") {
-                     Text(place.address ?? "").multilineTextAlignment(.trailing)
+                     Text(place.address ?? "")
+                        .multilineTextAlignment(.trailing)
+                        .font(.callout)
                   }
                }
 
                Section("Information") {
-                  RowItem("Category") {}
+                  RowItem("Category") {
+                     Picker("Category", selection: $place.category) {
+                        ForEach(MKPointOfInterestCategory.getAllCategories(), id: \.self) {
+                           Text($0)
+                              .tag($0)
+                        }
+                     }
+                     .pickerStyle(.navigationLink)
+                  }
                   RowItem("Rating") {
                      Rating(rating: $place.rating)
                   }
@@ -160,7 +158,9 @@ struct AddPlaceView: View {
                      TextField("URL", text: Binding(
                         get: { place.website ?? "" },
                         set: { place.website = $0 }
-                     )).multilineTextAlignment(.trailing)
+                     ))
+                     .multilineTextAlignment(.trailing)
+                     .font(.callout)
                   }
                   RowItem("Visited") {
                      Toggle("", isOn: $place.visited)
@@ -183,6 +183,20 @@ struct AddPlaceView: View {
                   visible = false
                }
             })
+         }
+         .sheet(isPresented: $showCamera) {
+            CameraView { outImage in
+               let raw = outImage.compressImage()!
+               place.image = raw
+            }
+         }
+         .sheet(isPresented: $showImage) {
+            CustomImagePicker { metadata in
+               if let outImage = metadata.image {
+                  let raw = outImage.compressImage()!
+                  place.image = raw
+               }
+            }
          }
       }
    }
