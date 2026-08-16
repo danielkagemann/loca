@@ -288,4 +288,5 @@ struct AddPlaceView: View {
 
 #Preview {
    AddPlaceView(visible: .constant(true))
+      .modelContainer(PreviewData.container)
 }

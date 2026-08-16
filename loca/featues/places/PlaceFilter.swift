@@ -23,9 +23,9 @@ struct PlaceFilter: View {
    @Query var places: [Place]
 
    @ViewBuilder func Tag(_ text: String, _ amount: Int, _ active: Bool) -> some View {
-      HStack {
+      HStack (spacing: 4) {
          Text(text).fontWeight(active ? .bold : .regular)
-         Text("\(amount)").font(.callout)
+         Text("\(amount)").font(.caption)
       }
       .padding(.horizontal, 10)
       .padding(.vertical, 6)

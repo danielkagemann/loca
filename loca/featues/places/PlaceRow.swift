@@ -57,7 +57,7 @@ struct PlaceRow: View {
                Spacer()
                if let date = place.visited {
                   let days = date.days(to: Date())
-                  Text(days == 0 ? "Today" : "\(days) ago").font(.caption2)
+                  Text(days == 0 ? "Today" : "\(days) days ago").font(.caption2)
                }
             }
          }
@@ -66,11 +66,5 @@ struct PlaceRow: View {
 }
 
 #Preview {
-   let place = Place(
-      title: "Berlin",
-      favorite: true,
-      visited: Date(),
-      rating: 4
-   )
-   PlaceRow(place: place)
+   PlaceRow(place: PreviewData.samplePlace)
 }

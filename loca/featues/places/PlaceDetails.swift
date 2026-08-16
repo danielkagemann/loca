@@ -214,15 +214,7 @@ private struct PlaceMap: View {
 
 #Preview {
    NavigationStack {
-      let place: Place = .init(
-         title: "Flughafen Alicante-Elche Miguel Hernández",
-         address: "Av. de l'Altet, 03195 Elx, Alicante, Spanien",
-         latitude: 49.81,
-         longitude: 8.65,
-         notes: "",
-         website: "https://www.aena.es/es/alicante-elche-miguel-hernandez.html",
-         visited: Date()
-      )
-      PlaceDetails(place: place)
+      PlaceDetails(place: PreviewData.samplePlace)
    }
+   .modelContainer(PreviewData.container)
 }
