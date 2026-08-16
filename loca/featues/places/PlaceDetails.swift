@@ -17,6 +17,7 @@ struct PlaceDetails: View {
 
    // state
    @State private var showEdit: Bool = false
+   @State private var showRelative: Bool = true
 
    // input
    var place: Place
@@ -39,6 +40,21 @@ struct PlaceDetails: View {
          RoundedRectangle(cornerRadius: 8)
             .stroke(Color.accent.opacity(0.8), lineWidth: 1)
       )
+   }
+   
+   func getVisitedDate () -> String {
+      if let visited = place.visited  {
+         if showRelative {
+            let days = visited.days(to: Date())
+            if days == 0 {
+               return "today"
+            }
+            return "\(days) days ago"
+         }
+         
+         return visited.toFormat("dd.MM.yyyy")
+      }
+      return "---"
    }
 
    var body: some View {
@@ -100,7 +116,9 @@ struct PlaceDetails: View {
 
             // website + last visit
             HStack(spacing: 8) {
-               Card("Last visit", place.visited?.toFormat("dd.MM.yyyy") ?? "---")
+               Card("Last visit", getVisitedDate()).onTapGesture {
+                  showRelative.toggle()
+               }
                Card("Website", place.website ?? "---")
                   .onTapGesture {
                      if let web = place.website, let url = URL(string: web) {
@@ -111,14 +129,16 @@ struct PlaceDetails: View {
 
             // notes
             if let notes = place.notes {
-               VStack(alignment: .leading) {
-                  Text(notes).foregroundStyle(.secondary)
-                     .alignLeft()
+               if !notes.isEmpty {
+                  VStack(alignment: .leading) {
+                     Text(notes).foregroundStyle(.secondary)
+                        .alignLeft()
+                  }
+                  .frame(maxWidth: .infinity)
+                  .padding(8)
+                  .background(Color.gray.opacity(0.15))
+                  .clipShape(RoundedRectangle(cornerRadius: 12))
                }
-               .frame(maxWidth: .infinity)
-               .padding(8)
-               .background(Color.gray.opacity(0.15))
-               .clipShape(RoundedRectangle(cornerRadius: 12))
             }
 
             // map
@@ -153,6 +173,7 @@ struct PlaceDetails: View {
                }
                .buttonStyle(.borderedProminent)
             }
+            .padding(.top,16)
             .font(.callout)
 
          }.padding(.horizontal, 16)
