@@ -11,9 +11,6 @@ struct PlaceRow: View {
    // Input
    let place: Place
    
-   // state
-   @State private var showDetails: Bool = false
-
    // Renamed function to avoid shadowing the SwiftUI `Image` type
    @ViewBuilder func placeImage() -> some View {
       Group {
@@ -48,12 +45,6 @@ struct PlaceRow: View {
             }
          }
       }
-      .onTapGesture {
-         showDetails.toggle()
-      }
-      .sheet(isPresented: $showDetails, content: {
-         PlaceDetails(place: place)
-      })
    }
 }
 

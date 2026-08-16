@@ -41,7 +41,7 @@ struct PlaceDetails: View {
             HStack {
                Image(systemName: "chevron.left")
                   .padding(8)
-                  .foregroundStyle(place.favorite ? .red : .white)
+                  .foregroundStyle(.white)
                   .background(.black.opacity(0.5))
                   .clipShape(Circle())
                   .onTapGesture {
@@ -74,8 +74,6 @@ struct PlaceDetails: View {
             if let addr = place.address {
                Text(addr).font(.caption).foregroundStyle(Color.secondary)
             }
-            // title
-            Text(place.title).font(.title).bold()
 
             // rating + category
             HStack(spacing: 6) {
@@ -138,6 +136,8 @@ struct PlaceDetails: View {
 
          }.padding(.horizontal, 16)
       }
+      .navigationTitle(place.title)
+      .navigationBarBackButtonHidden()
       .scrollIndicators(.hidden)
       .sheet(isPresented: $showEdit, content: {
          AddPlaceView(visible: $showEdit, reference: place)
@@ -171,7 +171,15 @@ private struct PlaceMap: View {
 }
 
 #Preview {
-   let place: Place = .init(title: "Goldstadt Padel", address: "Strietweg 90A, 75181 Pforzheim", latitude: 49.810000000000004, longitude: 8.649999999999999, notes: "Padelplatz mit tollen Aussichten", website: "https://padel.de")
-
-   PlaceDetails(place: place)
+   NavigationStack {
+      let place: Place = .init(
+         title: "Goldstadt Padel",
+         address: "Strietweg 90A, 75181 Pforzheim",
+         latitude: 49.81,
+         longitude: 8.65,
+         notes: "Padelplatz mit tollen Aussichten",
+         website: "https://padel.de"
+      )
+      PlaceDetails(place: place)
+   }
 }

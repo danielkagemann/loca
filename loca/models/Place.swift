@@ -9,7 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class Place {
+final class Place: Identifiable {
+   var id: UUID
    var title: String
    var address: String?
    var latitude: Double?
@@ -22,18 +23,20 @@ final class Place {
    var visited: Bool
    var rating: Int
 
-
-   init(title: String = "",
-        address: String? = nil,
-        latitude: Double? = nil,
-        longitude: Double? = nil,
-        notes: String? = nil,
-        image: Data? = nil,
-        website: String? = nil,
-        favorite: Bool = false,
-        category: String? = nil,
-        visited: Bool = false,
-        rating: Int = 0) {
+   init(
+      id: UUID = UUID(),
+      title: String = "",
+      address: String? = nil,
+      latitude: Double? = nil,
+      longitude: Double? = nil,
+      notes: String? = nil,
+      image: Data? = nil,
+      website: String? = nil,
+      favorite: Bool = false,
+      category: String? = nil,
+      visited: Bool = false,
+      rating: Int = 0) {
+      self.id = id
       self.title = title
       self.address = address
       self.latitude = latitude
@@ -46,8 +49,9 @@ final class Place {
       self.visited = visited
       self.rating = rating
    }
-   
+
    func hasValidCoordinates() -> Bool {
       latitude != nil && longitude != nil
    }
 }
+

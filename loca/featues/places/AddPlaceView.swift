@@ -77,7 +77,7 @@ struct AddPlaceView: View {
    }
 
    @ViewBuilder func sectionImage() -> some View {
-      Section("Image") {
+      Section {
          ZStack(alignment: .topTrailing) {
             Group {
                if let data = place.image,
@@ -144,7 +144,10 @@ struct AddPlaceView: View {
 
                Section("Information") {
                   RowItem("Category") {
-                     Picker("Category", selection: $place.category) {
+                     Picker("", selection: Binding(
+                        get: { place.category ?? "" },
+                        set: { place.category = $0 }
+                     )) {
                         ForEach(MKPointOfInterestCategory.getAllCategories(), id: \.self) {
                            Text($0)
                               .tag($0)
@@ -166,23 +169,10 @@ struct AddPlaceView: View {
                   RowItem("Visited") {
                      Toggle("", isOn: $place.visited)
                   }
+                  RowItem("Favorite") {
+                     Toggle("", isOn: $place.favorite)
+                  }
                }
-            }
-         }
-         onAppear {
-            if reference != nil {
-               // copy from reference to place
-               self.place.title = reference?.title ?? ""
-               self.place.image = reference?.image
-               self.place.website = reference?.website
-               self.place.address = reference?.address
-               self.place.favorite = reference?.favorite ?? false
-               self.place.visited = reference?.visited  ?? false
-               self.place.category = reference?.category
-               self.place.latitude = reference?.latitude
-               self.place.longitude = reference?.longitude
-               self.place.notes = reference?.notes
-               self.place.rating = reference?.rating ?? 0
             }
          }
          .navigationTitle(reference == nil ? "Add new place" : "Edit place")
@@ -228,6 +218,22 @@ struct AddPlaceView: View {
                   place.image = raw
                }
             }
+         }
+      }
+      .onAppear {
+         if reference != nil {
+            // copy from reference to place
+            self.place.title = reference?.title ?? ""
+            self.place.image = reference?.image
+            self.place.website = reference?.website
+            self.place.address = reference?.address
+            self.place.favorite = reference?.favorite ?? false
+            self.place.visited = reference?.visited ?? false
+            self.place.category = reference?.category
+            self.place.latitude = reference?.latitude
+            self.place.longitude = reference?.longitude
+            self.place.notes = reference?.notes
+            self.place.rating = reference?.rating ?? 0
          }
       }
    }
