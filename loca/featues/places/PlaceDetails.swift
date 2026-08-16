@@ -13,24 +13,30 @@ struct PlaceDetails: View {
    // env
    @Environment(\.dismiss) var dismiss
    @Environment(\.modelContext) var modelContext
+   @Environment(\.openURL) private var openURL
 
    // state
    @State private var showEdit: Bool = false
 
    // input
    var place: Place
-   
-   
+
    @ViewBuilder func Card(_ title: String, _ value: String) -> some View {
       VStack {
-         Text(title).bold().font(.caption).alignLeft()
-         Text(value).foregroundStyle(.secondary).alignLeft().lineLimit(1)
+         Text(title)
+            .bold()
+            .font(.caption2)
+            .alignLeft()
+         Text(value)
+            .font(.callout)
+            .foregroundStyle(.secondary)
+            .alignLeft().lineLimit(1)
       }
       .padding(8)
       .background(.accent.opacity(0.1))
-      .clipShape(RoundedRectangle(cornerRadius: 12))
+      .clipShape(RoundedRectangle(cornerRadius: 8))
       .overlay(
-         RoundedRectangle(cornerRadius: 12)
+         RoundedRectangle(cornerRadius: 8)
             .stroke(Color.accent.opacity(0.8), lineWidth: 1)
       )
    }
@@ -79,10 +85,8 @@ struct PlaceDetails: View {
 
          VStack(alignment: .leading, spacing: 12) {
             // address
-            if let addr = place.address {
-               Text(addr).font(.caption).foregroundStyle(Color.secondary)
-            }
-            
+            PlaceAddress(place: place)
+
             // title
             Text(place.title).font(.title).bold()
 
@@ -95,11 +99,16 @@ struct PlaceDetails: View {
             }
 
             // website + last visit
-            HStack (spacing:8){
+            HStack(spacing: 8) {
                Card("Last visit", place.visited?.toFormat("dd.MM.yyyy") ?? "---")
                Card("Website", place.website ?? "---")
+                  .onTapGesture {
+                     if let web = place.website, let url = URL(string: web) {
+                        openURL(url)
+                     }
+                  }
             }
-            
+
             // notes
             if let notes = place.notes {
                VStack(alignment: .leading) {
@@ -190,7 +199,7 @@ private struct PlaceMap: View {
          latitude: 49.81,
          longitude: 8.65,
          notes: "",
-         website:"https://www.aena.es/es/alicante-elche-miguel-hernandez.html",
+         website: "https://www.aena.es/es/alicante-elche-miguel-hernandez.html",
          visited: Date()
       )
       PlaceDetails(place: place)

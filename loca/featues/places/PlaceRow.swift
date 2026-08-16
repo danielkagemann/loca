@@ -33,7 +33,7 @@ struct PlaceRow: View {
          placeImage()
          VStack (alignment: .leading){
             Text(place.title).bold()
-            Text(place.address ?? "").font(.caption).foregroundStyle(Color.gray)
+            PlaceAddress(place:place)
             HStack {
                if let cat = place.category {
                   Chip(content: cat)
