@@ -8,7 +8,7 @@
 import SwiftData
 import SwiftUI
 
-let NO_COUNTRY = "No country
+let NO_COUNTRY = "No country"
 
 struct PlaceListView: View {
    private struct PlaceCountryGroup: Identifiable {
@@ -112,7 +112,7 @@ struct PlaceListView: View {
                   }
                }
             }
-            .listStyle(.grouped)
+            .listStyle(.insetGrouped)
             .navigationDestination(for: UUID.self) { placeId in
                if let place = places.first(where: { $0.id == placeId }) {
                   PlaceDetails(place: place)

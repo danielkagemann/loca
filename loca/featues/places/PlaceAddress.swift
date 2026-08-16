@@ -13,6 +13,12 @@ struct PlaceAddress: View {
 
    // input
    let place: Place
+   let noAction: Bool
+
+   init(place: Place, noAction: Bool = false) {
+      self.place = place
+      self.noAction = noAction
+   }
 
    var body: some View {
       if place.address != nil {
@@ -23,6 +29,8 @@ struct PlaceAddress: View {
          .font(.caption)
          .foregroundStyle(.secondary)
          .onTapGesture {
+            guard !noAction else { return }
+
             let lat = place.latitude ?? 0
             let long = place.longitude ?? 0
             let urlString = "http://maps.apple.com/?ll=\(lat),\(long)"

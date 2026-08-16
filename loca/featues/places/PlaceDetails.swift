@@ -29,7 +29,7 @@ struct PlaceDetails: View {
             .font(.caption2)
             .alignLeft()
          Text(value)
-            .font(.callout)
+            .font(.caption)
             .foregroundStyle(.secondary)
             .alignLeft().lineLimit(1)
       }
@@ -41,9 +41,9 @@ struct PlaceDetails: View {
             .stroke(Color.accent.opacity(0.8), lineWidth: 1)
       )
    }
-   
-   func getVisitedDate () -> String {
-      if let visited = place.visited  {
+
+   func getVisitedDate() -> String {
+      if let visited = place.visited {
          if showRelative {
             let days = visited.days(to: Date())
             if days == 0 {
@@ -51,7 +51,7 @@ struct PlaceDetails: View {
             }
             return "\(days) days ago"
          }
-         
+
          return visited.toFormat("dd.MM.yyyy")
       }
       return "---"
@@ -77,15 +77,6 @@ struct PlaceDetails: View {
             .clipped()
 
             HStack {
-               Image(systemName: "chevron.left")
-                  .padding(8)
-                  .foregroundStyle(.white)
-                  .background(.black.opacity(0.5))
-                  .clipShape(Circle())
-                  .onTapGesture {
-                     dismiss()
-                  }
-
                Spacer()
 
                Image(systemName: place.favorite ? "heart.fill" : "heart")
@@ -99,7 +90,7 @@ struct PlaceDetails: View {
             }.padding(8)
          }
 
-         VStack(alignment: .leading, spacing: 12) {
+         VStack(alignment: .leading) {
             // address
             PlaceAddress(place: place)
 
@@ -130,14 +121,8 @@ struct PlaceDetails: View {
             // notes
             if let notes = place.notes {
                if !notes.isEmpty {
-                  VStack(alignment: .leading) {
-                     Text(notes).foregroundStyle(.secondary)
-                        .alignLeft()
-                  }
-                  .frame(maxWidth: .infinity)
-                  .padding(8)
-                  .background(Color.gray.opacity(0.15))
-                  .clipShape(RoundedRectangle(cornerRadius: 12))
+                  Text(notes).foregroundStyle(.secondary).padding(.top,8)
+                     .alignLeft()
                }
             }
 
@@ -149,6 +134,7 @@ struct PlaceDetails: View {
                   latitude: latitude,
                   longitude: longitude
                )
+               .padding(.top,8)
             }
 
             // actions
@@ -173,13 +159,23 @@ struct PlaceDetails: View {
                }
                .buttonStyle(.borderedProminent)
             }
-            .padding(.top,16)
+            .padding(.top, 16)
             .font(.callout)
 
          }.padding(.horizontal, 16)
       }
       .navigationTitle(place.title)
-      .navigationBarBackButtonHidden()
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+         ToolbarItem(placement: .topBarLeading) {
+            Button(action: {
+               dismiss()
+            }) {
+               Image(systemName: "chevron.left")
+                  .padding(8)
+            }
+         }
+      }
       .scrollIndicators(.hidden)
       .sheet(isPresented: $showEdit, content: {
          AddPlaceView(visible: $showEdit, reference: place)
