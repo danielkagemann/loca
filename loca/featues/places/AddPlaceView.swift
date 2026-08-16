@@ -146,6 +146,12 @@ struct AddPlaceView: View {
                         .font(.callout)
                   }
                }
+               
+               Section("Notes") {
+                  TextField("", text: Binding(
+                     get: { place.notes ?? "" },
+                     set: { place.notes = $0 }))
+               }
 
                Section("Information") {
                   RowItem("Category") {
@@ -160,6 +166,9 @@ struct AddPlaceView: View {
                      }
                      .pickerStyle(.navigationLink)
                   }
+                  RowItem("Favorite") {
+                     Toggle("", isOn: $place.favorite)
+                  }
                   RowItem("Rating") {
                      Rating(rating: $place.rating)
                   }
@@ -172,19 +181,14 @@ struct AddPlaceView: View {
                      .font(.callout)
                   }
                   RowItem("Visited") {
-                        Toggle("", isOn: $isVisited)
-
+                     Toggle("", isOn: $isVisited)
                   }
                   if isVisited {
                      DatePicker("", selection: Binding(
                         get: { place.visited ?? Date() },
                         set: { place.visited = $0 }),
-                                displayedComponents: .date)
-                     .datePickerStyle(.wheel)
-                  }
-
-                  RowItem("Favorite") {
-                     Toggle("", isOn: $place.favorite)
+                     displayedComponents: .date)
+                        .datePickerStyle(.wheel)
                   }
                }
             }
