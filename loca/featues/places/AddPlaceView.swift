@@ -43,7 +43,7 @@ struct AddPlaceView: View {
    @ViewBuilder fileprivate func sectionSearch() -> some View {
       if !place.hasValidCoordinates() {
          Section("Search the place") {
-            Text("Enter the address or the name of the place and select from the suggestions").font(.callout)
+            Text("Enter the address or the name of the place and select from the suggestions").font(.callout).foregroundStyle(.secondary)
             TextField("Name of the place or address...", text: $searchText)
                .textInputAutocapitalization(.words)
                .autocorrectionDisabled()
@@ -51,7 +51,10 @@ struct AddPlaceView: View {
                   performSearch(query: newValue)
                }
 
-            if !searchResults.isEmpty {
+         }
+         
+         if !searchResults.isEmpty {
+            Section ("Found places") {
                List {
                   ForEach(Array(searchResults.prefix(5).enumerated()), id: \.offset) { _, item in
                      renderSearchItem(item)

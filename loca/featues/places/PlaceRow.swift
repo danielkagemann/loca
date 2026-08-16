@@ -54,6 +54,11 @@ struct PlaceRow: View {
                   .frame(width: 14, height: 14)
                   .foregroundColor(Color.orange)
                Text("\(place.rating)").font(.caption2).bold()
+               Spacer()
+               if let date = place.visited {
+                  let days = date.days(to: Date())
+                  Text(days == 0 ? "Today" : "\(days) ago").font(.caption2)
+               }
             }
          }
       }
