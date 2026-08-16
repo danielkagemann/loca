@@ -13,19 +13,30 @@ struct PlaceRow: View {
    
    // Renamed function to avoid shadowing the SwiftUI `Image` type
    @ViewBuilder func placeImage() -> some View {
-      Group {
-         if let data = place.image,
-            let uiImage = UIImage(data: data) {
-            Image(uiImage: uiImage)
+      ZStack (alignment: .bottomTrailing) {
+         Group {
+            if let data = place.image,
+               let uiImage = UIImage(data: data) {
+               Image(uiImage: uiImage)
+                  .resizable()
+                  .scaledToFill()
+            } else {
+               RoundedRectangle(cornerRadius: 12)
+                  .fill(Color.gray)
+            }
+         }
+         .frame(width: 64, height: 64)
+         .clipShape(RoundedRectangle(cornerRadius: 12))
+         
+         if place.favorite {
+            Image(systemName: "heart.fill")
+               .renderingMode(.template)
                .resizable()
-               .scaledToFill()
-         } else {
-            RoundedRectangle(cornerRadius: 12)
-               .fill(Color.gray)
+               .foregroundStyle(.red)
+               .frame(width: 12,height: 12)
+               .padding(4)
          }
       }
-      .frame(width: 64, height: 64)
-      .clipShape(RoundedRectangle(cornerRadius: 12))
    }
 
    var body: some View {
