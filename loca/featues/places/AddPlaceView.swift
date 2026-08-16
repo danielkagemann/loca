@@ -103,6 +103,14 @@ struct AddPlaceView: View {
                   .onTapGesture {
                      showCamera = true
                   }
+               
+               if let pbImage = UIPasteboard.general.image {
+                  Image(systemName:"document.on.clipboard")
+                     .onTapGesture {
+                        let raw = pbImage.compressImage()!
+                        place.image = raw
+                     }
+               }
 
                if place.image != nil {
                   Image(systemName: "trash")
