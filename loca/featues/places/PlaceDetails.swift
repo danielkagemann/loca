@@ -19,6 +19,21 @@ struct PlaceDetails: View {
 
    // input
    var place: Place
+   
+   
+   @ViewBuilder func Card(_ title: String, _ value: String) -> some View {
+      VStack {
+         Text(title).bold().font(.caption).alignLeft()
+         Text(value).foregroundStyle(.secondary).alignLeft().lineLimit(1)
+      }
+      .padding(8)
+      .background(.accent.opacity(0.1))
+      .clipShape(RoundedRectangle(cornerRadius: 12))
+      .overlay(
+         RoundedRectangle(cornerRadius: 12)
+            .stroke(Color.accent.opacity(0.8), lineWidth: 1)
+      )
+   }
 
    var body: some View {
       ScrollView {
@@ -37,6 +52,7 @@ struct PlaceDetails: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 200)
+            .clipped()
 
             HStack {
                Image(systemName: "chevron.left")
@@ -49,14 +65,6 @@ struct PlaceDetails: View {
                   }
 
                Spacer()
-               Image(systemName: place.visited ? "person.fill" : "person")
-                  .padding(8)
-                  .foregroundStyle(place.visited ? .accent : .white)
-                  .background(.black.opacity(0.5))
-                  .clipShape(Circle())
-                  .onTapGesture {
-                     place.visited.toggle()
-                  }
 
                Image(systemName: place.favorite ? "heart.fill" : "heart")
                   .padding(8)
@@ -74,6 +82,9 @@ struct PlaceDetails: View {
             if let addr = place.address {
                Text(addr).font(.caption).foregroundStyle(Color.secondary)
             }
+            
+            // title
+            Text(place.title).font(.title).bold()
 
             // rating + category
             HStack(spacing: 6) {
@@ -83,11 +94,12 @@ struct PlaceDetails: View {
                }
             }
 
-            // website
-            if let url = place.website {
-               Text("Web \(url)").foregroundStyle(.accent)
+            // website + last visit
+            HStack (spacing:8){
+               Card("Last visit", place.visited?.toFormat("dd.MM.yyyy") ?? "---")
+               Card("Website", place.website ?? "---")
             }
-
+            
             // notes
             if let notes = place.notes {
                VStack(alignment: .leading) {
@@ -173,12 +185,13 @@ private struct PlaceMap: View {
 #Preview {
    NavigationStack {
       let place: Place = .init(
-         title: "Goldstadt Padel",
-         address: "Strietweg 90A, 75181 Pforzheim",
+         title: "Flughafen Alicante-Elche Miguel Hernández",
+         address: "Av. de l'Altet, 03195 Elx, Alicante, Spanien",
          latitude: 49.81,
          longitude: 8.65,
-         notes: "Padelplatz mit tollen Aussichten",
-         website: "https://padel.de"
+         notes: "",
+         website:"https://www.aena.es/es/alicante-elche-miguel-hernandez.html",
+         visited: Date()
       )
       PlaceDetails(place: place)
    }

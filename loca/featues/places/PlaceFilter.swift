@@ -40,7 +40,7 @@ struct PlaceFilter: View {
             .onTapGesture {
                filter = .all
             }
-         Tag("Visited", places.filter { $0.visited }.count, filter == .visited)
+         Tag("Visited", places.filter { $0.visited != nil }.count, filter == .visited)
             .onTapGesture {
                filter = .visited
             }

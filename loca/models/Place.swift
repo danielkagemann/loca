@@ -20,7 +20,7 @@ final class Place: Identifiable {
    var website: String?
    var favorite: Bool
    var category: String?
-   var visited: Bool
+   var visited: Date?
    var rating: Int
 
    init(
@@ -34,7 +34,7 @@ final class Place: Identifiable {
       website: String? = nil,
       favorite: Bool = false,
       category: String? = nil,
-      visited: Bool = false,
+      visited: Date? = nil,
       rating: Int = 0) {
       self.id = id
       self.title = title

@@ -25,7 +25,7 @@ struct PlaceListView: View {
          case .all:
             return try modelContext.fetch(FetchDescriptor<Place>())
          case .visited:
-            let descriptor = FetchDescriptor<Place>(predicate: #Predicate { $0.visited == true })
+            let descriptor = FetchDescriptor<Place>(predicate: #Predicate { $0.visited != nil })
             return try modelContext.fetch(descriptor)
          case .favorites:
             let descriptor = FetchDescriptor<Place>(predicate: #Predicate { $0.favorite == true })

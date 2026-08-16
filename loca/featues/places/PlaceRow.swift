@@ -25,6 +25,7 @@ struct PlaceRow: View {
          }
       }
       .frame(width: 64, height: 64)
+      .clipShape(RoundedRectangle(cornerRadius: 12))
    }
 
    var body: some View {
@@ -52,7 +53,7 @@ struct PlaceRow: View {
    let place = Place(
       title: "Berlin",
       favorite: true,
-      visited: true,
+      visited: Date(),
       rating: 4
    )
    PlaceRow(place: place)

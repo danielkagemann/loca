@@ -12,15 +12,12 @@ struct AddPlaceView: View {
 
    // state
    @State private var place: Place = .init()
+   @State private var isVisited: Bool = false
 
    @State private var searchText: String = ""
    @State private var searchResults: [MKMapItem] = []
    @State private var showImage: Bool = false
    @State private var showCamera: Bool = false
-
-   private var isSaveDisabled: Bool {
-      return false
-   }
 
    @ViewBuilder fileprivate func renderSearchItem(_ item: MKMapItem) -> some View {
       VStack(alignment: .leading, spacing: 2) {
@@ -103,9 +100,9 @@ struct AddPlaceView: View {
                   .onTapGesture {
                      showCamera = true
                   }
-               
+
                if let pbImage = UIPasteboard.general.image {
-                  Image(systemName:"document.on.clipboard")
+                  Image(systemName: "document.on.clipboard")
                      .onTapGesture {
                         let raw = pbImage.compressImage()!
                         place.image = raw
@@ -175,8 +172,17 @@ struct AddPlaceView: View {
                      .font(.callout)
                   }
                   RowItem("Visited") {
-                     Toggle("", isOn: $place.visited)
+                        Toggle("", isOn: $isVisited)
+
                   }
+                  if isVisited {
+                     DatePicker("", selection: Binding(
+                        get: { place.visited ?? Date() },
+                        set: { place.visited = $0 }),
+                                displayedComponents: .date)
+                     .datePickerStyle(.wheel)
+                  }
+
                   RowItem("Favorite") {
                      Toggle("", isOn: $place.favorite)
                   }
@@ -236,7 +242,12 @@ struct AddPlaceView: View {
             self.place.website = reference?.website
             self.place.address = reference?.address
             self.place.favorite = reference?.favorite ?? false
-            self.place.visited = reference?.visited ?? false
+            if reference?.visited != nil {
+               self.isVisited = true
+            } else {
+               self.isVisited = false
+            }
+            self.place.visited = reference?.visited
             self.place.category = reference?.category
             self.place.latitude = reference?.latitude
             self.place.longitude = reference?.longitude
