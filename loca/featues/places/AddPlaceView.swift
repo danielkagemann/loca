@@ -15,23 +15,28 @@ struct AddPlaceView: View {
    @State private var isVisited: Bool = false
 
    @State private var searchText: String = ""
+   @State private var searchTask: Task<Void, Never>?
+   
    @State private var searchResults: [MKMapItem] = []
    @State private var showImage: Bool = false
    @State private var showCamera: Bool = false
+   @State private var showCategory: Bool = false
 
    @ViewBuilder fileprivate func renderSearchItem(_ item: MKMapItem) -> some View {
       VStack(alignment: .leading, spacing: 2) {
          Text(item.name ?? "Unknown")
             .font(.body).bold()
-         Text(item.address?.fullAddress ?? "no address").font(.caption)
+         Text(item.formattedAddressEnglishCountry).font(.caption)
          if let category = item.pointOfInterestCategory {
             Chip(content: category.displayName)
          }
       }
       .onTapGesture {
-         place.address = item.address?.fullAddress
+         place.address = item.formattedAddressEnglishCountry
          place.title = item.name ?? place.title
          place.category = item.pointOfInterestCategory?.displayName
+         
+         debugPrint(item.location)
          place.latitude = item.location.coordinate.latitude
          place.longitude = item.location.coordinate.longitude
          place.website = item.url?.absoluteString ?? place.website
@@ -48,13 +53,17 @@ struct AddPlaceView: View {
                .textInputAutocapitalization(.words)
                .autocorrectionDisabled()
                .onChange(of: searchText) { _, newValue in
-                  performSearch(query: newValue)
+                  searchTask?.cancel()
+                  searchTask = Task {
+                     try? await Task.sleep(for: .milliseconds(400))
+                     guard !Task.isCancelled else { return }
+                     performSearch(query: newValue)
+                  }
                }
-
          }
-         
+
          if !searchResults.isEmpty {
-            Section ("Found places") {
+            Section("Found places") {
                List {
                   ForEach(Array(searchResults.prefix(5).enumerated()), id: \.offset) { _, item in
                      renderSearchItem(item)
@@ -74,6 +83,7 @@ struct AddPlaceView: View {
          Spacer()
          content()
       }
+      .contentShape(.rect)
    }
 
    @ViewBuilder func sectionImage() -> some View {
@@ -147,9 +157,21 @@ struct AddPlaceView: View {
                      Text(place.address ?? "")
                         .multilineTextAlignment(.trailing)
                         .font(.callout)
+                        .onTapGesture {
+                           searchText = place.title
+                           place.address = nil
+                           place.longitude = nil
+                           place.latitude = nil
+                           
+                           Task {
+                              try? await Task.sleep(for: .milliseconds(400))
+                              guard !Task.isCancelled else { return }
+                              performSearch(query: place.title)
+                           }
+                        }
                   }
                }
-               
+
                Section("Notes") {
                   TextField("", text: Binding(
                      get: { place.notes ?? "" },
@@ -158,16 +180,12 @@ struct AddPlaceView: View {
 
                Section("Information") {
                   RowItem("Category") {
-                     Picker("", selection: Binding(
-                        get: { place.category ?? "" },
-                        set: { place.category = $0 }
-                     )) {
-                        ForEach(MKPointOfInterestCategory.getAllCategories(), id: \.self) {
-                           Text($0)
-                              .tag($0)
+                     Text(place.category ?? "")
+                        .multilineTextAlignment(.trailing)
+                        .font(.callout)
+                        .onTapGesture {
+                           showCategory = true
                         }
-                     }
-                     .pickerStyle(.navigationLink)
                   }
                   RowItem("Favorite") {
                      Toggle("", isOn: $place.favorite)
@@ -240,6 +258,12 @@ struct AddPlaceView: View {
                }
             }
          }
+         .sheet(isPresented: $showCategory) {
+            PlaceCategories(selected: place.category ?? "") { cat in
+               place.category = cat
+               showCategory.toggle()
+            }
+         }
       }
       .onAppear {
          if reference != nil {
@@ -273,6 +297,7 @@ struct AddPlaceView: View {
       }
       let request = MKLocalSearch.Request()
       request.naturalLanguageQuery = trimmed
+
       let search = MKLocalSearch(request: request)
       search.start { response, _ in
          DispatchQueue.main.async {

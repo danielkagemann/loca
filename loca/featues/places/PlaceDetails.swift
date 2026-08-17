@@ -166,16 +166,6 @@ struct PlaceDetails: View {
       }
       .navigationTitle(place.title)
       .navigationBarTitleDisplayMode(.inline)
-      .toolbar {
-         ToolbarItem(placement: .topBarLeading) {
-            Button(action: {
-               dismiss()
-            }) {
-               Image(systemName: "chevron.left")
-                  .padding(8)
-            }
-         }
-      }
       .scrollIndicators(.hidden)
       .sheet(isPresented: $showEdit, content: {
          AddPlaceView(visible: $showEdit, reference: place)

@@ -175,3 +175,32 @@ extension MKPointOfInterestCategory {
       Array(Set(allCategories.map { $0.displayName } + customCategories)).sorted()
    }
 }
+
+extension MKMapItem {
+   /// Ländername garantiert auf Englisch, unabhängig vom Gerätegebietsschema
+   var englishCountryName: String? {
+      guard let isoCode = placemark.isoCountryCode, !isoCode.isEmpty else { return nil }
+      return Locale(identifier: "en_US").localizedString(forRegionCode: isoCode)
+   }
+
+   /// Volle Adresse mit erzwungenem englischem Ländernamen
+   var formattedAddressEnglishCountry: String {
+      guard let reps = addressRepresentations else {
+         return (address?.fullAddress ?? name ?? "").components(separatedBy: "\n").joined(separator: ", ")
+      }
+
+      let full = (reps.fullAddress(includingRegion: true, singleLine: true) ?? "")
+         .components(separatedBy: "\n").joined(separator: ", ")
+
+      // replace last element with english country
+      let englishCountry = englishCountryName ?? ""
+
+      // drop last element
+      let components = full.components(separatedBy: ", ")
+      let withoutCountry = components.dropLast().joined(separator: ", ")
+
+      return [withoutCountry, englishCountry]
+         .filter { !$0.isEmpty }
+         .joined(separator: ", ")
+   }
+}
