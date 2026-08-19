@@ -53,7 +53,10 @@ struct PlaceRow: View {
                   .resizable()
                   .frame(width: 14, height: 14)
                   .foregroundColor(Color.orange)
-               Text("\(place.rating)").font(.caption2).bold()
+               // only show rating if visited
+               if place.visited != nil {
+                  Text("\(place.rating)").font(.caption2).bold()
+               }
                Spacer()
                if let date = place.visited {
                   let days = date.days(to: Date())
@@ -62,6 +65,7 @@ struct PlaceRow: View {
             }
          }
       }
+      .contentShape(.rect)
    }
 }
 

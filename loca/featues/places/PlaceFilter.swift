@@ -21,6 +21,11 @@ struct PlaceFilter: View {
 
    // queries
    @Query var places: [Place]
+   
+   // derived state
+   var allCategories: Set<String> {
+      Set(places.compactMap(\.category))
+   }
 
    @ViewBuilder func Tag(_ text: String, _ amount: Int, _ active: Bool) -> some View {
       HStack (spacing: 4) {
@@ -51,9 +56,20 @@ struct PlaceFilter: View {
 
          Spacer()
       }
+      /*
+         ScrollView(.horizontal, showsIndicators: false) {
+            HStack (spacing: 8){
+               ForEach(Array(allCategories).sorted(), id: \.self) { category in
+                  Text(category)
+               }
+            }.font(.callout)
+         }*/
    }
 }
 
 #Preview {
    PlaceFilter(filter: .constant(.all))
+      .modelContainer(PreviewData.container)
+
 }
+

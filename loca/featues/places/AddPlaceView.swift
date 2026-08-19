@@ -83,7 +83,6 @@ struct AddPlaceView: View {
          Spacer()
          content()
       }
-      .contentShape(.rect)
    }
 
    @ViewBuilder func sectionImage() -> some View {
@@ -157,18 +156,18 @@ struct AddPlaceView: View {
                      Text(place.address ?? "")
                         .multilineTextAlignment(.trailing)
                         .font(.callout)
-                        .onTapGesture {
-                           searchText = place.title
-                           place.address = nil
-                           place.longitude = nil
-                           place.latitude = nil
-                           
-                           Task {
-                              try? await Task.sleep(for: .milliseconds(400))
-                              guard !Task.isCancelled else { return }
-                              performSearch(query: place.title)
-                           }
-                        }
+                  }
+                  .onTapGesture {
+                     searchText = place.title
+                     place.address = nil
+                     place.longitude = nil
+                     place.latitude = nil
+                     
+                     Task {
+                        try? await Task.sleep(for: .milliseconds(400))
+                        guard !Task.isCancelled else { return }
+                        performSearch(query: place.title)
+                     }
                   }
                }
 
@@ -183,16 +182,19 @@ struct AddPlaceView: View {
                      Text(place.category ?? "")
                         .multilineTextAlignment(.trailing)
                         .font(.callout)
-                        .onTapGesture {
-                           showCategory = true
-                        }
                   }
+                  .onTapGesture {
+                     showCategory = true
+                  }
+
                   RowItem("Favorite") {
                      Toggle("", isOn: $place.favorite)
                   }
+                  
                   RowItem("Rating") {
                      Rating(rating: $place.rating)
                   }
+                  
                   RowItem("Website") {
                      TextField("URL", text: Binding(
                         get: { place.website ?? "" },
@@ -201,6 +203,7 @@ struct AddPlaceView: View {
                      .multilineTextAlignment(.trailing)
                      .font(.callout)
                   }
+                  
                   RowItem("Visited") {
                      Toggle("", isOn: $isVisited)
                   }

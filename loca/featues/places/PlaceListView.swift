@@ -99,7 +99,7 @@ struct PlaceListView: View {
             // filter
             PlaceFilter(filter: $filter)
                .padding(.horizontal, 16)
-
+            
             // list
             List {
                ForEach(groupedPlaces()) { group in
