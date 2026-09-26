@@ -19,26 +19,33 @@ struct PlaceAddress: View {
       self.place = place
       self.noAction = noAction
    }
+    
+    @ViewBuilder func Content()->some View {
+        HStack {
+           Image(systemName: "mappin.and.ellipse")
+           Text((place.address ?? "").split(separator: "\n").joined(separator: ", ")).lineLimit(1)
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
+    }
 
    var body: some View {
       if place.address != nil {
-         HStack {
-            Image(systemName: "mappin.and.ellipse")
-            Text((place.address ?? "").split(separator: "\n").joined(separator: ", ")).lineLimit(1)
-         }
-         .font(.caption)
-         .foregroundStyle(.secondary)
-         .onTapGesture {
-            guard !noAction else { return }
+          if noAction {
+              Content()
+          } else {
+              Button(action: {
+                  let lat = place.latitude ?? 0
+                  let long = place.longitude ?? 0
+                  let urlString = "http://maps.apple.com/?ll=\(lat),\(long)"
 
-            let lat = place.latitude ?? 0
-            let long = place.longitude ?? 0
-            let urlString = "http://maps.apple.com/?ll=\(lat),\(long)"
-
-            if let url = URL(string: urlString) {
-               openURL(url)
-            }
-         }
+                  if let url = URL(string: urlString) {
+                     openURL(url)
+                  }
+              }) {
+                  Content()
+              }
+          }
       }
    }
 }

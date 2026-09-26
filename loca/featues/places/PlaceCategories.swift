@@ -20,12 +20,14 @@ struct PlaceCategories: View {
    var body: some View {
       NavigationView {
          List(filteredCategories, id: \.self) { category in
-            Text(category)
-               .fontWeight(selected == category ? .bold : .regular)
-               .contentShape(.rect)
-               .onTapGesture {
-               action(category)
-            }
+             Button(action: {
+                 action(category)
+             }) {
+                 Text(category)
+                    .fontWeight(selected == category ? .bold : .regular)
+                    
+             }
+             .contentShape(.rect)
          }
          .listStyle(.plain)
          .navigationTitle("Select cateogory")

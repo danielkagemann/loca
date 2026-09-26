@@ -78,15 +78,15 @@ struct PlaceDetails: View {
 
             HStack {
                Spacer()
-
-               Image(systemName: place.favorite ? "heart.fill" : "heart")
-                  .padding(8)
-                  .foregroundStyle(place.favorite ? .red : .white)
-                  .background(.black.opacity(0.5))
-                  .clipShape(Circle())
-                  .onTapGesture {
-                     place.favorite.toggle()
-                  }
+                Button(action: {
+                    place.favorite.toggle()
+                }) {
+                    Image(systemName: place.favorite ? "heart.fill" : "heart")
+                        .padding(8)
+                        .foregroundStyle(place.favorite ? .red : .white)
+                        .background(.black.opacity(0.5))
+                        .clipShape(Circle())
+                }
             }.padding(8)
          }
 

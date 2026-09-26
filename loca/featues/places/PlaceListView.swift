@@ -90,10 +90,12 @@ struct PlaceListView: View {
             HStack {
                Text("Loca").bold().font(.title)
                Spacer()
-               Image(systemName: "plus.app")
-                  .resizable()
-                  .frame(width: 24, height: 24)
-                  .onTapGesture { showAddPlace = true }
+                Button(action: {
+                    showAddPlace = true}) {
+                        Image(systemName: "plus.app")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                    }
             }.padding(.horizontal, 16)
 
             // filter
